@@ -61,11 +61,15 @@ jobs:
               exit 1
             fi
 
-    - name: "Check startups yaml syntax (yamllint)"
-      run: time ./ci/check_yaml_front_matter_metadata.sh content/_startups/
-
-    - name: "Check authors yaml syntax (yamllint)"
-      run: time ./ci/check_yaml_front_matter_metadata.sh content/_authors/
+    - name: "Check yaml syntax (yamllint)"
+      run: |
+            for dir in content/_startups content/_authors ; do
+              set +e
+              echo "Scan $dir"
+              time ./ci/check_yaml_front_matter_metadata.sh $dir
+              ret=$?
+            done
+            exit $ret
 
     - name: Check Jekyll configuration
       run: bundle exec jekyll doctor

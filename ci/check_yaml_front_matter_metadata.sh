@@ -12,7 +12,7 @@ YAMLLINT_CONFIG_FILE="${YAMLLINT_CONFIG_FILE:-.yamllint.yml}"
 
 error=0
 for s in ${DIR}/*.md ; do
-    output=$(ci/extract_yaml_front_matter_metadata.py $s | yamllint -c .yamllint.yml  --no-warnings -f github  - ) || { echo "::error file=$s" ; echo "$output"; error=1 ; }
+    output=$(ci/extract_yaml_front_matter_metadata.py $s | yamllint -c .yamllint.yml  --no-warnings -f github  - ) || { echo "$output"|sed -e "s|file=stdin|file=$s|g"; error=1 ; }
 done
 
 exit $error
